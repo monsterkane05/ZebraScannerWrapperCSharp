@@ -106,44 +106,105 @@ namespace ZebraScannerWrapper
 
         //Scanner Commands
         //Enable/Disable
-        public void SetEnabledScanner(Scanner scan, bool enabled) { scan.SetEnabledInternal(enabled); _scannerLink.SetEnabledScanner(scan, enabled); InternalUpdateLEDEvent(); }
-        public void SetEnabledAllScanners(bool enabled) { foreach (Scanner scan in _scanners) { scan.SetEnabledInternal(enabled); _scannerLink.SetEnabledScanner(scan, enabled); } InternalUpdateLEDEvent(); }
+        public ScannerResponse SetEnabledScanner(Scanner scan, bool enabled) 
+        { 
+            scan.SetEnabledInternal(enabled); 
+            var response =  _scannerLink.SetEnabledScanner(scan, enabled);
+            InternalUpdateLEDEvent();
+            return response;
+        }
+
+        public List<ScannerResponse> SetEnabledAllScanners(bool enabled) 
+        { 
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) 
+            { 
+                scan.SetEnabledInternal(enabled); 
+                responses.Add(_scannerLink.SetEnabledScanner(scan, enabled)); 
+            } 
+            InternalUpdateLEDEvent(); 
+            return responses;
+        }
 
         //Set LED Color
-        public void SetLEDColorScanner(Scanner scan, LEDColor col) { _scannerLink.SetLEDColor(scan, col); }
-        public void SetLEDColorAllScanners(LEDColor col) { foreach (Scanner scan in _scanners) _scannerLink.SetLEDColor(scan, col); }
+        public ScannerResponse SetLEDColorScanner(Scanner scan, LEDColor col) { return _scannerLink.SetLEDColor(scan, col); }
+        public List<ScannerResponse> SetLEDColorAllScanners(LEDColor col) 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.SetLEDColor(scan, col));
+            return responses;
+        }
 
         //Play Beep
-        public void PlayBeepScanner(Scanner scan, BeepType beepType) { _scannerLink.BeepScanner(scan, beepType); }
-        public void PlayBeepAllScanners(BeepType beepType) { foreach (Scanner scan in _scanners) _scannerLink.BeepScanner(scan, beepType); }
+        public ScannerResponse PlayBeepScanner(Scanner scan, BeepType beepType) { return _scannerLink.BeepScanner(scan, beepType); }
+        public List<ScannerResponse> PlayBeepAllScanners(BeepType beepType) 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.BeepScanner(scan, beepType));
+            return responses;
+        }
 
         //Pull Trigger
-        public void PullTriggerScanner(Scanner scan) { _scannerLink.PullTriggerScanner(scan); }
-        public void PullALlTriggerScanner() { foreach (Scanner scan in _scanners) _scannerLink.PullTriggerScanner(scan); }
+        public ScannerResponse PullTriggerScanner(Scanner scan) { return _scannerLink.PullTriggerScanner(scan); }
+        public List<ScannerResponse> PullAllTriggerScanner() 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.PullTriggerScanner(scan)); 
+            return responses;
+        }
 
         //Release Trigger
-        public void ReleaseTriggerScanner(Scanner scan) { _scannerLink.ReleaseTriggerScanner(scan); }
-        public void ReleaseTriggerAllScanners() { foreach (Scanner scan in _scanners) _scannerLink.ReleaseTriggerScanner(scan); }
+        public ScannerResponse ReleaseTriggerScanner(Scanner scan) { return _scannerLink.ReleaseTriggerScanner(scan); }
+        public List<ScannerResponse> ReleaseTriggerAllScanners() {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.ReleaseTriggerScanner(scan));
+            return responses;
+        }
 
         //Reboot 
-        public void RebootScanner(Scanner scan) { _scannerLink.RebootScanner(scan); }
-        public void RebootAllScanners() { foreach (Scanner scan in _scanners) _scannerLink.RebootScanner(scan); }
+        public ScannerResponse RebootScanner(Scanner scan) { return _scannerLink.RebootScanner(scan); }
+        public List<ScannerResponse> RebootAllScanners() 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.RebootScanner(scan));
+            return responses;
+        }
 
         //Aim On
-        public void AimOnScanner(Scanner scan) { _scannerLink.AimOnScanner(scan); }
-        public void AimOnAllScanners() { foreach (Scanner scan in _scanners) _scannerLink.AimOnScanner(scan); }
+        public ScannerResponse AimOnScanner(Scanner scan) { return _scannerLink.AimOnScanner(scan); }
+        public List<ScannerResponse> AimOnAllScanners() 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.AimOnScanner(scan));
+            return responses;
+        }
 
         //Aim Off
-        public void AimOffScanner(Scanner scan) { _scannerLink.AimOffScanner(scan); }
-        public void AimOffAllScanners() { foreach (Scanner scan in _scanners) _scannerLink.AimOffScanner(scan); }
+        public ScannerResponse AimOffScanner(Scanner scan) { return _scannerLink.AimOffScanner(scan); }
+        public List<ScannerResponse> AimOffAllScanners()
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.AimOffScanner(scan)); 
+            return responses;
+        }
 
         //Scale Zero
-        public void ScaleZeroScanner(Scanner scan) { _scannerLink.ScaleZeroScanner(scan); }
-        public void ScaleZeroAllScanners() { foreach (Scanner scan in _scanners) _scannerLink.ScaleZeroScanner(scan); }
+        public ScannerResponse ScaleZeroScanner(Scanner scan) { return _scannerLink.ScaleZeroScanner(scan); }
+        public List<ScannerResponse> ScaleZeroAllScanners() 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.ScaleZeroScanner(scan));
+            return responses;
+        }
 
         //Scale Reset
-        public void ScaleResetScanner(Scanner scan) { _scannerLink.ScaleResetScanner(scan); }
-        public void ScaleResetAllScanners() { foreach (Scanner scan in _scanners) _scannerLink.ScaleResetScanner(scan); }
+        public ScannerResponse ScaleResetScanner(Scanner scan) { return _scannerLink.ScaleResetScanner(scan); }
+        public List<ScannerResponse> ScaleResetAllScanners() 
+        {
+            List<ScannerResponse> responses = new List<ScannerResponse>();
+            foreach (Scanner scan in _scanners) responses.Add(_scannerLink.ScaleResetScanner(scan)); 
+            return responses;
+        }
 
         //Barcode Callback Registration and Unregister
         public void RegisterBarcodeCallback(Action<ScanData> NewCallback)

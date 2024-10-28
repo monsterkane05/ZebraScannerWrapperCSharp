@@ -125,7 +125,7 @@ namespace ZebraScannerWrapper
             return scannerList;
         }
 
-        internal void SetEnabledScanner(Scanner scanner, bool enabled)
+        internal ScannerResponse SetEnabledScanner(Scanner scanner, bool enabled)
         {
             if (enabled) 
             {
@@ -134,6 +134,7 @@ namespace ZebraScannerWrapper
                             </inArgs>";
 
                 Execute(inXML, 2014, out string xml, out int stat);
+                return new ScannerResponse(scanner, (ScannerStatus) stat);
             }
             else
             {
@@ -142,11 +143,12 @@ namespace ZebraScannerWrapper
                             </inArgs>";
 
                 Execute(inXML, 2013, out string xml, out int stat);
+                return new ScannerResponse(scanner, (ScannerStatus)stat);
             }
         }
 
 
-        internal void SetLEDColor(Scanner scanner, LEDColor col) 
+        internal ScannerResponse SetLEDColor(Scanner scanner, LEDColor col) 
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
@@ -156,9 +158,10 @@ namespace ZebraScannerWrapper
                             </inArgs>";
 
             Execute(inXML, 6000, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void BeepScanner(Scanner scanner, BeepType beepType) 
+        internal ScannerResponse BeepScanner(Scanner scanner, BeepType beepType) 
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
@@ -168,77 +171,82 @@ namespace ZebraScannerWrapper
                             </inArgs>";
 
             Execute(inXML, 6000, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void PullTriggerScanner(Scanner scanner) 
+        internal ScannerResponse PullTriggerScanner(Scanner scanner) 
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 2011, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void ReleaseTriggerScanner(Scanner scanner)
+        internal ScannerResponse ReleaseTriggerScanner(Scanner scanner)
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 2012, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void RebootScanner(Scanner scanner)
+        internal ScannerResponse RebootScanner(Scanner scanner)
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 2019, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void AimOnScanner(Scanner scanner)
+        internal ScannerResponse AimOnScanner(Scanner scanner)
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 2003, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void AimOffScanner(Scanner scanner)
+        internal ScannerResponse AimOffScanner(Scanner scanner)
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 2002, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void ScaleZeroScanner(Scanner scanner)
+        internal ScannerResponse ScaleZeroScanner(Scanner scanner)
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 7002, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
-        internal void ScaleResetScanner(Scanner scanner)
+        internal ScannerResponse ScaleResetScanner(Scanner scanner)
         {
             string inXML = @$"<inArgs>
                                 <scannerID>{scanner.GetID()}</scannerID>
                             </inArgs>";
 
             Execute(inXML, 7015, out string xml, out int stat);
+            return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
-
 
         internal void Execute(string inXml, int opcode, out string outXML, out int status)
         {
             _cScanner.ExecCommand(opcode, inXml, out outXML, out status);
         }
-
-       
     }
 }

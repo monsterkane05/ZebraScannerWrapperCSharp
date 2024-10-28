@@ -57,15 +57,15 @@ namespace ZebraScannerWrapper.Data
 
 
         //public scanner API
-        public void SetLEDColor(LEDColor col) { _manager.SetLEDColorScanner(this, col); }
-        public void SetEnabled(bool enabled) { _manager.SetEnabledScanner(this, enabled); }
-        public void PlayBeep(BeepType beepType) { _manager.PlayBeepScanner(this, beepType); }
-        public void PullTrigger() {  _manager.PullTriggerScanner(this); }
-        public void ReleaseTrigger() { _manager.ReleaseTriggerScanner(this); }
-        public void Reboot() { _manager.RebootScanner(this); }
-        public void AimOn() {  _manager.AimOnScanner(this); }
-        public void AimOff() { _manager.AimOffScanner(this); }
-        public void ScaleZero() { _manager.ScaleZeroScanner(this); }
-        public void ScaleReset() { _manager.ScaleResetScanner(this); }
+        public ScannerResponse SetLEDColor(LEDColor col) { return _manager.SetLEDColorScanner(this, col); }
+        public ScannerResponse SetEnabled(bool enabled) { return _manager.SetEnabledScanner(this, enabled); }
+        public ScannerResponse PlayBeep(BeepType beepType) { return _manager.PlayBeepScanner(this, beepType); }
+        public ScannerResponse PullTrigger() {  return _manager.PullTriggerScanner(this); }
+        public ScannerResponse ReleaseTrigger() { return _manager.ReleaseTriggerScanner(this); }
+        public ScannerResponse Reboot() { return _manager.RebootScanner(this); }
+        public ScannerResponse AimOn() {  return _manager.AimOnScanner(this); }
+        public ScannerResponse AimOff() { return _manager.AimOffScanner(this); }
+        public ScannerResponse ScaleZero() { return _manager.ScaleZeroScanner(this); }
+        public ScannerResponse ScaleReset() { return _manager.ScaleResetScanner(this); }
             }
 }
