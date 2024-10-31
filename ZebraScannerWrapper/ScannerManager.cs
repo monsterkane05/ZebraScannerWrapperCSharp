@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Text;
+using System.Xml.Linq;
 using ZebraScannerWrapper.Data;
 using ZebraScannerWrapper.Enums;
 
@@ -86,17 +88,113 @@ namespace ZebraScannerWrapper
 
         private void InternalBarcodeEvent(short EventType, string RawScanData) 
         {
-        
+            //Check for a successfull decode
+            if(EventType == 1) 
+            {
+                ScanData data = new ScanData();
+
+                XElement scanXMLElements = XElement.Parse(RawScanData);
+                int.TryParse(scanXMLElements.Element("scannerID")?.Value, out int id);
+                Scanner? scan = _scanners.Find(x => x.GetID() == id);
+                if (scan != null) 
+                {
+                    //we have a successfull valid scanner which has sent the barcode and has not disconnected.
+                    data.Scanner = scan;
+
+                    XElement? scanDataElement = scanXMLElements.Element("arg-xml")?.Element("scandata");
+                    if(scanDataElement == null) { return; }
+
+                    int.TryParse(scanDataElement.Element("datatype")?.Value, out int type);
+
+                    if(scan.ScannerType != ScannerType.NIXMODB) 
+                    {
+                        //We can convert directly to the enum as these types are mapped with
+                        //the SNAPI protocol
+
+                        data.BarcodeType = (BarcodeType)type;
+                    }
+                    else 
+                    {
+                        //Convert Nixdorf Mode B to the SNAPI enum.
+                    }
+
+                    //Convert the string data into a barcode by first convering each of
+                    //the string segments to bytes and then using ascii encoding to convert the data
+                    //to a string.
+                    string[]? tempArray = scanDataElement.Element("datalabel")?.Value.Split(' ');
+                    if(tempArray != null) 
+                    {
+                        List<byte> bytes = new List<byte>();
+                        foreach (string number in tempArray)
+                        {
+                            if (String.IsNullOrEmpty(number))
+                            {
+                                break;
+                            }
+
+                            bytes.Add(Convert.ToByte(number, 16));
+                        }
+
+                        data.RawBarcodeData = bytes.ToArray();
+                        data.Barcode = Encoding.ASCII.GetString(bytes.ToArray());
+                    }
+                    
+
+                    //Call all registered barcode callbacks with the data.
+                    foreach(var callback in _barcodeScanCallbacks) 
+                    {
+                        callback(data);
+                    }
+
+                }
+                
+            }
         }
 
         private void InternalPNPEvent(short EventType, string PNPData) 
         {
-            UpdateInternalScannerList();
-
-            foreach(Action<PNPData> action in _pnpDataCallbacks) 
+            if(EventType == 0) 
             {
-                //Process all callbacks wanting plug and play data.
+                //attaching scanner so get the details of new scanners now so we can send it back
+                UpdateInternalScannerList();
+            }
+           
 
+            XElement scanXMLElements = XElement.Parse(PNPData);
+            XElement? argxmlElement = scanXMLElements.Element("arg-xml");
+            if (argxmlElement == null) return;
+
+            XElement? scannersElement = argxmlElement.Element("scanners");
+            if (scannersElement == null) return;
+
+            List<XElement> scanXMLNodes = scannersElement.Elements("scanner").ToList();
+
+            foreach (XElement scanXMLElement in scanXMLNodes)
+            {
+                if (scanXMLElement.Element("scannerID") != null)
+                {
+                    if (int.TryParse(scanXMLElement.Element("scannerID")?.Value, out int id))
+                    {
+                        Scanner? scan = _scanners.Find(x => x.GetID() == id);
+                        if(scan != null) 
+                        {
+                            foreach (var action in _pnpDataCallbacks)
+                            {
+                                //Process all callbacks wanting plug and play data.
+                                PNPData data = new PNPData();
+                                data.Scanner = scan;
+                                data.PNPEvent = (PNPEventType) EventType;
+                                action(data);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(EventType == 1) 
+            {
+                //Update the scanners now to remove the lost scanner.
+                UpdateInternalScannerList();
             }
         }
 

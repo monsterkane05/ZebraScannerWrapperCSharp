@@ -30,7 +30,7 @@ namespace ZebraScannerWrapper
         internal void RegisterEvents(Action<short, string> pnp, Action<short, string> scan) 
         {
             _cScanner.PNPEvent += (short evntType, ref string pnpData) => { pnp(evntType, pnpData); };
-            _cScanner.BarcodeEvent += (short evntType, ref string scanData) => { pnp(evntType, scanData); };
+            _cScanner.BarcodeEvent += (short evntType, ref string scanData) => { scan(evntType, scanData); };
 
             string inXML = @$"<inArgs>
                                 <cmdArgs>
