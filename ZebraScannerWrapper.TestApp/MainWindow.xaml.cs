@@ -192,7 +192,7 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                ScannerResponse response = _selectedScanner.PlayBeep((BeepType)LEDComboBox.SelectedItem);
+                ScannerResponse response = _selectedScanner.PlayBeep((BeepType)BeepComboBox.SelectedItem);
                 if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
