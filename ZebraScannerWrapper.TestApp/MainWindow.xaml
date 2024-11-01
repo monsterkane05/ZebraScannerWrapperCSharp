@@ -1,0 +1,101 @@
+﻿<Window x:Class="ZebraScannerWrapper.TestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ZebraScannerWrapper.TestApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" MinHeight="80"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="5">
+            <TextBlock FontWeight="Bold">Live Weight Configuration</TextBlock>
+            <TextBlock>SerialNumber</TextBlock>
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right">Start</Button>
+                <TextBox ></TextBox>
+            </DockPanel>
+            
+            <TextBlock>Live Weight Not Configured</TextBlock>
+        </StackPanel>
+        
+        <ListBox x:Name="ScannerListBox" SelectedIndex="0" Grid.Row="1" SelectionChanged="ScannerListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ScannerType}" Margin="5"/>
+                        <TextBlock Text="{Binding ModelNumber}" Margin="5"/>
+                        <TextBlock Text="{Binding SerialNumber}" Margin="5"/>
+                        <TextBlock Text="{Binding DateOfManafacture}" Margin="5"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox x:Name="LogListBox" Grid.Row="2">
+            
+        </ListBox>
+        
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.RowSpan="3">
+            <TextBlock x:Name="SelectedScannerField"></TextBlock>
+
+            <TextBlock></TextBlock>
+
+            <Button Margin="2" Click="Reboot_Click">Reboot Scanner</Button>
+
+            <TextBlock FontWeight="Bold">Beep Scanner</TextBlock>
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Margin="2" Click="Beep_Click">Beep</Button>
+                <ComboBox x:Name="BeepComboBox" SelectedIndex="0">
+
+                </ComboBox>
+            </DockPanel>
+
+            <TextBlock FontWeight="Bold">LED Scanner</TextBlock>
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Margin="2" Click="LED_Click">Set LED</Button>
+                <ComboBox x:Name="LEDComboBox" SelectedIndex="0">
+
+                </ComboBox>
+            </DockPanel>
+
+            <TextBlock FontWeight="Bold">Trigger Control</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="2" Click="PullTrigger_Click">Pull Trigger</Button>
+                <Button Margin="2" Click="ReleaseTrigger_Click">Release Trigger</Button>
+            </StackPanel>
+
+            <TextBlock FontWeight="Bold">Aim Control</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="2" Click="AimOn_Click">Aim On</Button>
+                <Button Margin="2" Click="AimOff_Click">Aim Off</Button>
+            </StackPanel>
+
+            <TextBlock FontWeight="Bold">Scale Commands</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="2" Click="ScaleZero_Click">Scale Zero</Button>
+                <Button Margin="2" Click="ScaleReset_Click">Scale Reset</Button>
+            </StackPanel>
+
+            <TextBlock FontWeight="Bold">Weight</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="2" Click="GetWeight_Click">GetWeight</Button>
+                <TextBlock x:Name="WeightText">000.000kg</TextBlock>
+            </StackPanel>
+
+            
+
+        </StackPanel>
+    </Grid>
+</Window>

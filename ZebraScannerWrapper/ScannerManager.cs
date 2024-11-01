@@ -202,6 +202,8 @@ namespace ZebraScannerWrapper
         public Scanner? GetScannerBySerialNumber(string serialNumber) { return _scanners.Where(x => x.SerialNumber?.Trim().ToLower() == serialNumber.Trim().ToLower()).FirstOrDefault(); }
         public Scanner? GetScannerByModelNumber(string modelNumber) { return _scanners.Where(x => x.ModelNumber?.Trim().ToLower() == modelNumber.Trim().ToLower()).FirstOrDefault(); }
 
+        public List<Scanner> GetScanners() { return _scanners; }    
+
         //Scanner Commands
         //Enable/Disable
         public ScannerResponse SetEnabledScanner(Scanner scan, bool enabled) 
