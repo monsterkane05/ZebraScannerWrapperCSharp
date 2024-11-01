@@ -4,6 +4,41 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>ZebraScannerWrapperCSharp</PackageId>
+    <Title>manage and interface with zebra barcode scanners providing events for weight, barcodes, pnp and send commands to scanners</Title>
+    <Authors>Kane Partridge</Authors>
+    <Company />
+    <Description>This wrapper provides the following:
+Object abstractions of the xml based C API.
+Custom LED mangement indicating whether a scanner is enabled or disabled.
+Centralised management of all connected scanners included nested scanners.
+Live scale weight support for scales (implemented with polling).
+Event based callbacks for PNP, barcodes, scale weight.
+
+
+Supported Scanner Commands:
+Enable / Disable
+SetLEDColor
+PlayBeep
+Pull / Release Trigger
+Reboot Scanner
+Aim On / Off
+Scale Zero
+Scale Reset
+Scale Weight
+
+
+Tested with:
+Zebra MP7001
+Zebra DS4608
+Zebra MS4717</Description>
+    <PackageProjectUrl>https://github.com/monsterkane05/ZebraScannerWrapperCSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/monsterkane05/ZebraScannerWrapperCSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +51,17 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
