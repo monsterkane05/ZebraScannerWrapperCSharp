@@ -19,12 +19,14 @@ namespace ZebraScannerWrapper.TestApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ScannerManager _manager;
-        private Scanner _selectedScanner;
+        private readonly ScannerManager _manager;
+        private Scanner? _selectedScanner = null;
 
 
         public MainWindow()
         {
+            _manager = new ScannerManager(ScannerManager.DefaultSupportedScannerTypes, true, true);
+
             InitializeComponent();
             Loaded += MainWindow_Loaded;
             
@@ -36,7 +38,7 @@ namespace ZebraScannerWrapper.TestApp
             BeepComboBox.ItemsSource = Enum.GetValues(typeof(BeepType)).Cast<BeepType>();
             LEDComboBox.ItemsSource = Enum.GetValues(typeof(LEDColor)).Cast<LEDColor>();
 
-            _manager = new ScannerManager(ScannerManager.DefaultSupportedScannerTypes, true, false);
+            
 
             UpdateListBox();
             _manager.RegisterPNPCallback(RecievePnp);
@@ -45,14 +47,26 @@ namespace ZebraScannerWrapper.TestApp
         }
         private void RecieveWeightLive(WeightData weight)
         {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LiveWeightTextBox.Text = weight.Weight + "  " +  weight.WeightUnit.ToString() + "  " + weight.WeightStatus.ToString();
 
+                if (_manager.IsLiveWeightRunning())
+                {
+                    LiveWeightButton.Content = "STOP";
+                }
+                else
+                {
+                    LiveWeightButton.Content = "START";
+                }
+            }));
         }
 
         private void RecieveScan(ScanData scanData) 
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                LogListBox.Items.Add($"LOG: BARCODE: Scanner {scanData.Scanner.ModelNumber} scanned type: {scanData.BarcodeType.ToString()} data: {scanData.Barcode}");
+                LogListBox.Items.Add($"LOG: BARCODE: Scanner {scanData.Scanner.ModelNumber} scanned type: {scanData.BarcodeType} data: {scanData.Barcode}");
             })); 
         }
 
@@ -60,7 +74,7 @@ namespace ZebraScannerWrapper.TestApp
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                LogListBox.Items.Add($"LOG: PNP: Scanner {pnpData.Scanner.ModelNumber} has event {pnpData.PNPEvent.ToString()}");
+                LogListBox.Items.Add($"LOG: PNP: Scanner {pnpData.Scanner.ModelNumber} has event {pnpData.PNPEvent}");
                 UpdateListBox();
             }));
             
@@ -74,8 +88,7 @@ namespace ZebraScannerWrapper.TestApp
 
         private void ScannerListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Scanner scan = ScannerListBox.SelectedItem as Scanner ;
-            if(scan != null) 
+            if (ScannerListBox.SelectedItem is Scanner scan)
             {
                 SelectedScannerField.Text = "SERIAL: " + scan.SerialNumber + " NAME: " + scan.ModelNumber;
                 _selectedScanner = scan;
@@ -86,7 +99,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if(_selectedScanner != null)
             {
-                _selectedScanner.PullTrigger();
+                ScannerResponse response = _selectedScanner.PullTrigger();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -94,7 +108,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if(_selectedScanner != null)
             {
-                _selectedScanner.ReleaseTrigger();
+                ScannerResponse response = _selectedScanner.ReleaseTrigger();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -102,7 +117,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                _selectedScanner.AimOn();
+                ScannerResponse response = _selectedScanner.AimOn();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -110,7 +126,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                _selectedScanner.AimOff();
+                ScannerResponse response = _selectedScanner.AimOff();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -118,7 +135,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if(_selectedScanner != null)
             {
-                _selectedScanner.Reboot();
+                ScannerResponse response = _selectedScanner.Reboot();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -126,7 +144,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                _selectedScanner.ScaleZero();
+                ScannerResponse response = _selectedScanner.ScaleZero();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -134,7 +153,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                _selectedScanner.ScaleReset();
+                ScannerResponse response = _selectedScanner.ScaleReset();
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -142,7 +162,19 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                WeightText.Text = "new weight";
+                ScannerResponse response = _selectedScanner.GetScaleWeight();
+                if (response.Response == ScannerStatus.SUCCESS)
+                {
+                    WeightData? data = (WeightData?)response.ResponseData;
+                    if (data != null)
+                    {
+                        WeightText.Text = data.Weight + data.WeightUnit.ToString();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(response.Response.ToString());
+                }
             }
         }
 
@@ -150,7 +182,8 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                _selectedScanner.PlayBeep((BeepType)LEDComboBox.SelectedItem);
+                ScannerResponse response = _selectedScanner.PlayBeep((BeepType)LEDComboBox.SelectedItem);
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
 
@@ -158,7 +191,27 @@ namespace ZebraScannerWrapper.TestApp
         {
             if (_selectedScanner != null)
             {
-                _selectedScanner.SetLEDColor((LEDColor)LEDComboBox.SelectedItem);
+                ScannerResponse response = _selectedScanner.SetLEDColor((LEDColor)LEDComboBox.SelectedItem);
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
+            }
+        }
+
+        private void StartLive_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedScanner != null)
+            {
+                
+                if (_manager.IsLiveWeightRunning())
+                {
+                    _manager.StopLiveWeight();
+                    LiveWeightButton.Content = "START";
+                    LiveWeightTextBox.Text = "Live weight is not enabled";
+                }
+                else
+                {
+                    _manager.StartLiveWeight(_selectedScanner);
+                }
+                
             }
         }
     }

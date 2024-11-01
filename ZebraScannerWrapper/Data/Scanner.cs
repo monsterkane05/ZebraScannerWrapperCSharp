@@ -67,5 +67,6 @@ namespace ZebraScannerWrapper.Data
         public ScannerResponse AimOff() { return _manager.AimOffScanner(this); }
         public ScannerResponse ScaleZero() { return _manager.ScaleZeroScanner(this); }
         public ScannerResponse ScaleReset() { return _manager.ScaleResetScanner(this); }
+        public ScannerResponse GetScaleWeight() { return _manager.GetScaleWeightScanner(this); }
             }
 }

@@ -244,6 +244,62 @@ namespace ZebraScannerWrapper
             return new ScannerResponse(scanner, (ScannerStatus)stat);
         }
 
+        internal ScannerResponse GetScaleWeightData(Scanner scanner)
+        {
+            string inXML = @$"<inArgs>
+                                <scannerID>{scanner.GetID()}</scannerID>
+                            </inArgs>";
+
+            Execute(inXML, 7000, out string xml, out int stat);
+
+            if(stat == 0)
+            {
+                
+
+                XElement scanXMLElements = XElement.Parse(xml);
+                int.TryParse(scanXMLElements.Element("scannerID")?.Value, out int id);
+                Scanner? scan = _manager.GetScanners().Find(x => x.GetID() == id);
+
+                if (scan != null)
+                {
+                    WeightData weightData = new WeightData(scan);
+
+                    XElement? responseElement = scanXMLElements.Element("arg-xml")?.Element("response");
+                    if (responseElement != null) 
+                    {
+                        decimal.TryParse(responseElement.Element("weight")?.Value, out decimal weight);
+                        weightData.Weight = weight;
+
+                        if (responseElement.Element("weight")?.Value == "English")
+                        {
+                            weightData.WeightUnit = WeightUnit.POUNDS;
+                        }
+                        else
+                        {
+                            weightData.WeightUnit = WeightUnit.KILOGRAMS;
+                        }
+
+                        int.TryParse(responseElement.Element("status")?.Value, out int weightStat);
+                        weightData.WeightStatus = (WeightStatus)weightStat;
+
+                        return new ScannerResponse(scanner, (ScannerStatus)stat, weightData);
+                    }
+                    else
+                    {
+                        throw new Exception("No Weight Data Found");
+                    }
+                }
+                else
+                {
+                    throw new Exception("No Scanner Found");
+                }
+            }
+            else
+            {
+                return new ScannerResponse(scanner, (ScannerStatus)stat);
+            }
+        }
+
         internal void Execute(string inXml, int opcode, out string outXML, out int status)
         {
             _cScanner.ExecCommand(opcode, inXml, out outXML, out status);

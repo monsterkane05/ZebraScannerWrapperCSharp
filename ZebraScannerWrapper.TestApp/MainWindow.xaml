@@ -23,11 +23,10 @@
             <TextBlock FontWeight="Bold">Live Weight Configuration</TextBlock>
             <TextBlock>SerialNumber</TextBlock>
             <DockPanel LastChildFill="True">
-                <Button DockPanel.Dock="Right">Start</Button>
-                <TextBox ></TextBox>
+                <Button x:Name="LiveWeightButton" DockPanel.Dock="Right" Click="StartLive_Click">START</Button>
             </DockPanel>
             
-            <TextBlock>Live Weight Not Configured</TextBlock>
+            <TextBlock x:Name="LiveWeightTextBox">Live Weight Not Configured</TextBlock>
         </StackPanel>
         
         <ListBox x:Name="ScannerListBox" SelectedIndex="0" Grid.Row="1" SelectionChanged="ScannerListBox_SelectionChanged">

@@ -11,12 +11,13 @@ namespace ZebraScannerWrapper.Data
     {
         public Scanner? RespondingScanner;
         public ScannerStatus Response;
+        public object? ResponseData;
 
-
-        public ScannerResponse(Scanner Scan, ScannerStatus Stat)
+        public ScannerResponse(Scanner Scan, ScannerStatus Stat, object? Data = null)
         {
             RespondingScanner = Scan;
             Response = Stat;
+            ResponseData = Data;
         }
     }
 }

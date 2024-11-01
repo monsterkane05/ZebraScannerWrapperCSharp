@@ -11,5 +11,10 @@ namespace ZebraScannerWrapper.Data
     {
         public Scanner Scanner { get; set; }
         public PNPEventType PNPEvent { get; set; }
+
+        public PNPData(Scanner Scan)
+        {
+            Scanner = Scan;
+        }
     }
 }

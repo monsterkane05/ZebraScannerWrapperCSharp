@@ -13,5 +13,10 @@ namespace ZebraScannerWrapper.Data
         public BarcodeType BarcodeType { get; set; }
         public string Barcode { get; set; } = "";
         public byte[] RawBarcodeData { get; set; } = new byte[1];
+
+        public ScanData(Scanner Scan)
+        {
+            Scanner = Scan;
+        }
     }
 }
