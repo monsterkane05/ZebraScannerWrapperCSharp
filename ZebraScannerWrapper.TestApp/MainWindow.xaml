@@ -69,6 +69,12 @@
                 </ComboBox>
             </DockPanel>
 
+            <TextBlock FontWeight="Bold">Enable / Disable</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="2" Click="Enable_Click">Enable</Button>
+                <Button Margin="2" Click="Disable_Click">Disable</Button>
+            </StackPanel>
+
             <TextBlock FontWeight="Bold">Trigger Control</TextBlock>
             <StackPanel Orientation="Horizontal">
                 <Button Margin="2" Click="PullTrigger_Click">Pull Trigger</Button>

@@ -8,6 +8,7 @@ namespace ZebraScannerWrapper.Enums
 {
     public enum BarcodeType
     {
+        UNKNOWN = 0,
         CODE_39 = 1,
         CODABAR = 2,
         CODE_128 = 3,
@@ -84,5 +85,57 @@ namespace ZebraScannerWrapper.Enums
         EAN_8_PLUS_5 = 138,
         EAN_13_PLUS_5 = 139,
         UPC_E1_PLUS_5 = 144
+    }
+
+    public class BarcodeTypeConvertor()
+    {
+        public static BarcodeType GetBarcodeTypeFromNixdorfB(int n) 
+        {
+            switch (n)
+            {
+                case 1:
+                    return BarcodeType.CODE_39;
+                case 2:
+                    return BarcodeType.CODABAR;
+                case 3:
+                    return BarcodeType.CODE_128;
+                case 4:
+                    return BarcodeType.DISCRETE_2_OF_5;
+                case 6:
+                    return BarcodeType.INTERLEAVED_2_OF_5;
+                case 7:
+                    return BarcodeType.CODE_93;
+                case 8:
+                    return BarcodeType.UPC_A;
+                case 9:
+                    return BarcodeType.UPC_E0;
+                case 10:
+                    return BarcodeType.EAN_8;
+                case 14:
+                    return BarcodeType.MSI;
+                case 15:
+                    return BarcodeType.EAN_128;
+                case 17:
+                    return BarcodeType.PDF_417;
+                case 26:
+                    return BarcodeType.MICRO_PDF;
+                case 27:
+                    return BarcodeType.DATAMATRIX;
+                case 28:
+                    return BarcodeType.QR_CODE;
+                case 37:
+                    return BarcodeType.MAXICODE;
+                case 45:
+                    return BarcodeType.AZTEC;
+                case 48:
+                    return BarcodeType.GS1_DATABAR;
+                case 49:
+                    return BarcodeType.RSS_LIMITED;
+                case 50:
+                    return BarcodeType.GS1_DATABAR_EXPANDED;
+                default:
+                    return BarcodeType.UNKNOWN;
+            }
+        }
     }
 }

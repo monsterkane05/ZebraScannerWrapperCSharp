@@ -16,6 +16,7 @@ namespace ZebraScannerWrapper
         private List<Action<ScanData>> _barcodeScanCallbacks = new List<Action<ScanData>>();
         private List<Action<WeightData>> _weightDataCallbacks = new List<Action<WeightData>>();
         private List<Action<PNPData>> _pnpDataCallbacks = new List<Action<PNPData>>();
+        private List<Action<bool>> _liveWeightStatusCallbacks = new List<Action<bool>>();
 
         private List<Scanner> _scanners = new List<Scanner>();
 
@@ -79,6 +80,11 @@ namespace ZebraScannerWrapper
                 {
                     break;
                 }
+            }
+
+            foreach (var action in _liveWeightStatusCallbacks)
+            {
+                action(false);
             }
         }
 
@@ -147,7 +153,7 @@ namespace ZebraScannerWrapper
                     else
                     {
                         //Convert Nixdorf Mode B to the SNAPI enum.
-                        //TODO: 
+                        data.BarcodeType = BarcodeTypeConvertor.GetBarcodeTypeFromNixdorfB(type);
                     }
 
                     //Convert the string data into a barcode by first convering each of
@@ -395,6 +401,22 @@ namespace ZebraScannerWrapper
             }
         }
 
+        //LiveWeightStatus Callback Registration and Unregister
+        public void RegisterLiveWeightStatusCallback(Action<bool> NewCallback)
+        {
+            if (NewCallback != null)
+            {
+                _liveWeightStatusCallbacks.Add(NewCallback);
+            }
+        }
+
+        public void UnregisterLiveWeightStatusCallback(Action<bool> CallbackToUnregister)
+        {
+            if (CallbackToUnregister != null)
+            {
+                _liveWeightStatusCallbacks.Remove(CallbackToUnregister);
+            }
+        }
 
         //Live Weight Subsystem
         public void StartLiveWeight(Scanner scanner)
@@ -406,6 +428,11 @@ namespace ZebraScannerWrapper
                     _liveWeightScanner = scanner;
                     _liveWeightThread = new Thread(x => { LiveWeightThreadInternal(); });
                     _liveWeightThread.Start();
+
+                    foreach(var action in _liveWeightStatusCallbacks)
+                    {
+                        action(true);
+                    }
                 }
             }
             

@@ -44,7 +44,17 @@ namespace ZebraScannerWrapper.TestApp
             _manager.RegisterPNPCallback(RecievePnp);
             _manager.RegisterBarcodeCallback(RecieveScan);
             _manager.RegisterWeightCallback(RecieveWeightLive);
+            _manager.RegisterLiveWeightStatusCallback(RecieveLiveWeightStatus);
         }
+
+        private void RecieveLiveWeightStatus(bool enabled)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LogListBox.Items.Add($"LiveWeightStatus: enabled = {enabled}");
+            }));
+        }
+
         private void RecieveWeightLive(WeightData weight)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -212,6 +222,24 @@ namespace ZebraScannerWrapper.TestApp
                     _manager.StartLiveWeight(_selectedScanner);
                 }
                 
+            }
+        }
+
+        private void Enable_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedScanner != null)
+            {
+                ScannerResponse response = _selectedScanner.SetEnabled(true);
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
+            }
+        }
+
+        private void Disable_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedScanner != null)
+            {
+                ScannerResponse response = _selectedScanner.SetEnabled(false);
+                if (response.Response != ScannerStatus.SUCCESS) { MessageBox.Show(response.Response.ToString()); }
             }
         }
     }
