@@ -2,6 +2,8 @@
 
 This C# class libary is built around the zebra core scanner driver which is avaliable as a COM object from: https://techdocs.zebra.com/dcs/scanners/sdk-windows/about/ 
 
+NUGET: https://www.nuget.org/packages/ZebraScannerWrapperCSharp 
+
 Demonstration app:
 ![image](https://github.com/user-attachments/assets/1335280d-cdf4-4d63-b508-75e3e1b6ab80)
 
